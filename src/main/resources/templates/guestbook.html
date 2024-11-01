@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 스터디 방명록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .guestbook-form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .guestbook-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            font-size: 1rem;
+        }
+        .guestbook-form input[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1rem;
+        }
+        .guestbook-form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .entries {
+            width: 100%;
+        }
+        .entry {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .entry-content {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        .entry-date {
+            color: #888;
+            font-size: 0.8rem;
+            text-align: right;
+        }
+
+        /* Mobile-friendly styles */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            .guestbook-form textarea {
+                font-size: 0.9rem;
+            }
+            .guestbook-form input[type="submit"] {
+                font-size: 0.9rem;
+            }
+            .entry-content {
+                font-size: 0.9rem;
+            }
+            .entry-date {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="title">오늘의 스터디 방명록</h1>
+
+    <form class="guestbook-form" th:action="@{/submit}" method="post">
+        <textarea name="content" rows="4" placeholder="방명록에 남길 메시지를 입력하세요" required></textarea>
+        <input type="submit" value="방명록 작성">
+    </form>
+
+    <div class="entries">
+        <div th:each="entry : ${entries}" class="entry">
+            <div class="entry-content" th:text="${entry.content}"></div>
+            <div class="entry-date" th:text="${#temporals.format(entry.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
