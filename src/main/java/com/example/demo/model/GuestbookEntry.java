@@ -20,6 +20,8 @@ public class GuestbookEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nickname;
+
     private String content;
 
     @CreationTimestamp
