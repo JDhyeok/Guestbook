@@ -12,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +31,15 @@ public class GuestbookController {
     public String showGuestBook(@CookieValue(value = "nickname", defaultValue = "") String nickname,
                                 HttpServletResponse response, Model model) {
         if (nickname.isEmpty()) {
-            // 랜덤 닉네임 생성
+
             String randomNickname = generateRandomNickname();
-            // 쿠키 생성
-            Cookie cookie = new Cookie("nickname", randomNickname);
-            cookie.setPath("/"); // 쿠키의 경로 설정
-            cookie.setMaxAge(365 * 24 * 60 * 60); // 1년 동안 유효
+            String encodedNickname = URLEncoder.encode(randomNickname, StandardCharsets.UTF_8);
+
+            Cookie cookie = new Cookie("nickname", encodedNickname);
+            cookie.setPath("/");
+            cookie.setMaxAge(-1);
             response.addCookie(cookie);
-            nickname = randomNickname; // 생성한 닉네임을 사용
+
         }
         model.addAttribute("entries", guestbookService.getAllEntries());
         model.addAttribute("newEntry", GuestbookEntry.builder().build());
@@ -42,15 +47,19 @@ public class GuestbookController {
     }
 
     private String generateRandomNickname() {
-        String[] nicknames = {"User1", "User2", "User3", "User4", "User5"}; // 랜덤 닉네임 목록
-        return nicknames[(int)(Math.random() * nicknames.length)];
+        String[] adjectives = {"노래하는", "지루해하는", "공부하는", "뛰어다니는", "사랑스러운", "멋진",
+                "즐거운", "빠른", "용감한", "창의적인", "행복한", "재미있는"};
+        String[] nouns = {"동혁", "기준", "은정", "진영", "근우", "시연", "지승", "혜지", "승민", "지은", "은진"};
+
+        return adjectives[(int)(Math.random() * adjectives.length)] + " " + nouns[(int)(Math.random() * nouns.length)];
     }
 
     @PostMapping("/submit")
     public String submitEntry(@CookieValue(value = "nickname", defaultValue = "Anonymous") String nickname,
                               @RequestParam("content") String content) {
+        String decodedValue = URLDecoder.decode(nickname, StandardCharsets.UTF_8); // URL 디코딩
         GuestbookEntry entry = GuestbookEntry.builder()
-                .nickname(nickname)
+                .nickname(decodedValue)
                 .content(content)
                 .build();
         guestbookService.saveEntry(entry);

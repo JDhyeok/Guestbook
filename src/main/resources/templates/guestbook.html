@@ -87,7 +87,7 @@
         }
         .entry-content {
             color: #333;
-            font-size: 0.9rem;
+            font-size: 1.2rem;
             word-wrap: break-word;
             flex: 1;
         }
@@ -116,6 +116,9 @@
         /* 깜빡이는 효과 CSS */
         .blink {
             animation: blink-animation 0.5s forwards;
+        }
+        .nickname {
+            font-size: 0.7rem;
         }
 
         @keyframes blink-animation {
@@ -197,7 +200,7 @@
         <div th:each="entry : ${entries}" class="entry">
             <div class="entry-container">
                 <div class="entry-header">
-                    <span class="nickname" th:text="${entry.nickname}"></span>
+                    <div class="nickname" th:text="${entry.nickname}"></div>
                     <div class="entry-date" th:text="${#temporals.format(entry.createdAt, 'HH:mm:ss')}"></div>
                 </div>
                 <div class="entry-content-wrapper">
