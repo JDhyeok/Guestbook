@@ -15,7 +15,16 @@ public class GuestbookService {
     public GuestbookEntry saveEntry(GuestbookEntry entry) {
         return guestbookRepository.save(entry);
     }
+
     public List<GuestbookEntry> getAllEntries() {
-        return guestbookRepository.findAll();
+        return guestbookRepository.findAllByOrderByCreatedAtDesc();
     }
+
+    public void likeEntry(Long id) {
+        GuestbookEntry entry = guestbookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("방명록 없음"));
+        entry.setLikes(entry.getLikes() + 1);
+        guestbookRepository.save(entry);
+    }
+
 }

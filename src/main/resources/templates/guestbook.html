@@ -35,7 +35,7 @@
             margin-bottom: 20px;
         }
         .guestbook-form textarea {
-            width: 100%;
+            width: 96.2%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
@@ -62,16 +62,35 @@
         .entry {
             border-bottom: 1px solid #ddd;
             padding: 10px 0;
+            display: flex;
+            justify-content: space-between; /* 왼쪽과 오른쪽 정렬 */
+            align-items: center;
         }
         .entry-content {
             color: #333;
-            font-size: 1rem;
+            font-size: 0.9rem; /* 글자 크기 작게 조정 */
             margin-bottom: 5px;
+            flex: 1; /* 공간 차지 */
+            word-wrap: break-word; /* 줄바꿈 처리 */
         }
         .entry-date {
             color: #888;
-            font-size: 0.8rem;
+            font-size: 0.7rem; /* 날짜 크기 조정 */
             text-align: right;
+            margin-left: 10px; /* 하트와 날짜 사이의 공간 추가 */
+        }
+        .like-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: red; /* 하트 색상 */
+            font-size: 0.8rem; /* 하트 크기 조정 */
+            padding: 0;
+            margin-left: 10px
+        }
+        .like-count {
+            margin-left: 1px;
+            font-size: 0.8rem; /* 좋아요 숫자 크기 조정 */
         }
 
         /* Mobile-friendly styles */
@@ -93,20 +112,48 @@
             }
         }
     </style>
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent new line in the textarea
+                document.querySelector('form').submit(); // Submit the form
+            }
+        }
+
+        function formatDate(createdAt) {
+            const now = new Date();
+            const date = new Date(createdAt);
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            const diffInDays = Math.floor(diffInSeconds / (60 * 60 * 24));
+
+            if (date.toDateString() === now.toDateString()) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            } else if (diffInDays < 7) {
+                return `${diffInDays}d ago`;
+            } else {
+                return `${Math.floor(diffInDays / 7)}w ago`;
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="container">
     <h1 class="title">오늘의 스터디 방명록</h1>
-
     <form class="guestbook-form" th:action="@{/submit}" method="post">
-        <textarea name="content" rows="4" placeholder="방명록에 남길 메시지를 입력하세요" required></textarea>
+        <textarea name="content" rows="2" placeholder="방명록에 남길 메시지를 입력하세요" required onkeypress="handleKeyPress(event)"></textarea>
         <input type="submit" value="방명록 작성">
     </form>
 
     <div class="entries">
         <div th:each="entry : ${entries}" class="entry">
             <div class="entry-content" th:text="${entry.content}"></div>
-            <div class="entry-date" th:text="${#temporals.format(entry.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></div>
+            <div class="entry-date" th:text="${#temporals.format(entry.createdAt, 'HH:mm:ss')}"></div>
+            <div style="display: flex; align-items: center;">
+                <form th:action="@{/like/{id}(id=${entry.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="like-button">❤️</button>
+                    <span class="like-count" th:text="${entry.likes}"></span>
+                </form>
+            </div>
         </div>
     </div>
 </div>

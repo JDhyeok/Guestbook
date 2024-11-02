@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -21,11 +22,9 @@ public class GuestbookEntry {
 
     private String content;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Builder
-    public GuestbookEntry(String content) {
-        this.content = content;
-        this.createdAt = LocalDateTime.now();
-    }
+    private int likes = 0;
+
 }
