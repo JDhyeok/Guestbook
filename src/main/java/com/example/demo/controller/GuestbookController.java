@@ -48,16 +48,16 @@ public class GuestbookController {
 
     private String generateRandomNickname() {
         String[] adjectives = {"노래하는", "지루해하는", "공부하는", "뛰어다니는", "사랑스러운", "멋진",
-                "즐거운", "빠른", "용감한", "창의적인", "행복한", "재미있는"};
+                "즐거운", "빠른", "용감한", "창의적인", "행복한", "재미있는", "열일하는", "생각하는", "안경쓴"};
         String[] nouns = {"동혁", "기준", "은정", "진영", "근우", "시연", "지승", "혜지", "승민", "지은", "은진"};
 
         return adjectives[(int)(Math.random() * adjectives.length)] + " " + nouns[(int)(Math.random() * nouns.length)];
     }
 
     @PostMapping("/submit")
-    public String submitEntry(@CookieValue(value = "nickname", defaultValue = "Anonymous") String nickname,
+    public String submitEntry(@CookieValue(value = "nickname", defaultValue = "익명") String nickname,
                               @RequestParam("content") String content) {
-        String decodedValue = URLDecoder.decode(nickname, StandardCharsets.UTF_8); // URL 디코딩
+        String decodedValue = URLDecoder.decode(nickname, StandardCharsets.UTF_8);
         GuestbookEntry entry = GuestbookEntry.builder()
                 .nickname(decodedValue)
                 .content(content)
@@ -69,6 +69,6 @@ public class GuestbookController {
     @PostMapping("/like/{id}")
     public String likeEntry(@PathVariable Long id) {
         guestbookService.likeEntry(id);
-        return "redirect:/"; // 성공적으로 좋아요를 누른 후 리다이렉트
+        return "redirect:/";
     }
 }
