@@ -6,7 +6,7 @@ on:
 
 env:
   DOCKER_HUB_USERNAME: ${{secrets.DOCKER_HUB_USERNAME}}
-  DOCKER_HUB_PASSWORD: ${{secrets.DOCKER_HUB_USERNAME}}
+  DOCKER_HUB_PASSWORD: ${{secrets.DOCKER_HUB_PASSWORD}}
   DOCKER_IMAGE_NAME: jdhyeok/bingo
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{secrets.DOCKER_HUB_USERNAME}}
-          password: ${{secrets.DOCKER_HUB_USERNAME}}
+          password: ${{secrets.DOCKER_HUB_PASSWORD}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
