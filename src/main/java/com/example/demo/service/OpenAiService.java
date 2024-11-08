@@ -21,7 +21,7 @@ import org.json.JSONObject;
 @RequiredArgsConstructor
 public class OpenAiService {
 
-    @Value("{api.key}")
+    @Value("{API_KEY}")
     private String apiKey;
 
     public String getAnalysis(String prompt) {
