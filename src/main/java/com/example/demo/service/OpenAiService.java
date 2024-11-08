@@ -4,12 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -21,10 +16,11 @@ import org.json.JSONObject;
 @RequiredArgsConstructor
 public class OpenAiService {
 
-    @Value("{API_KEY}")
+    @Value("${API_KEY}")
     private String apiKey;
 
     public String getAnalysis(String prompt) {
+
         String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
         String json = String.format("""
                 {
