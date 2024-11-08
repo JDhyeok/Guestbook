@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주식투자 보고서 분석</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .progress-label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .card {
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .analysis-section {
+            margin-bottom: 2rem;
+        }
+        .analysis-content {
+            white-space: pre-line;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="/report">주식투자 보고서 분석</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">보고서 작성</h2>
+            <form th:action="@{/report/analyze}" method="post" th:object="${report}">
+                <div class="mb-3">
+                    <label for="title" class="form-label">제목</label>
+                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="companyName" class="form-label">기업명</label>
+                    <input type="text" class="form-control" id="companyName" th:field="*{companyName}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="industry" class="form-label">산업</label>
+                    <input type="text" class="form-control" id="industry" th:field="*{industry}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">보고서 내용</label>
+                    <textarea class="form-control" id="content" th:field="*{content}" rows="10" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">분석하기</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${report.title != null}" class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title mb-4">분석 결과</h3>
+
+            <div class="mb-4">
+                <div class="progress-label">편향성 분석</div>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar" role="progressbar"
+                         th:style="'width: ' + ${report.biasScore} + '%'"
+                         th:text="${report.biasScore} + '점'">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="progress-label">리스크 분석</div>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         th:style="'width: ' + ${report.riskAnalysisScore} + '%'"
+                         th:text="${report.riskAnalysisScore} + '점'">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="progress-label">낙관도 분석</div>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar bg-warning" role="progressbar"
+                         th:style="'width: ' + ${report.optimismScore} + '%'"
+                         th:text="${report.optimismScore} + '점'">
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-content" th:text="${report.aiAnalysis}"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 로딩 모달 -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">분석 중입니다. 잠시만 기다려 주세요...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // 폼 제출 시 로딩 모달 표시
+    document.querySelector('form').addEventListener('submit', function () {
+        // 모달을 띄운다
+        var loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+        loadingModal.show();
+    });
+</script>
+</body>
+</html>

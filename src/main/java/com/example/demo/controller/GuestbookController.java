@@ -47,7 +47,7 @@ public class GuestbookController {
     }
 
     private String generateRandomNickname() {
-        String[] adjectives = {"노래하는", "지루해하는", "공부하는", "뛰어다니는", "사랑스러운", "멋진",
+        String[] adjectives = {"노래하는", "지루해하는", "공부하는", "뛰어다니는", "멋진",
                 "즐거운", "빠른", "용감한", "창의적인", "행복한", "재미있는", "열일하는", "생각하는", "안경쓴"};
         String[] nouns = {"동혁", "기준", "은정", "진영", "근우", "시연", "지승", "혜지", "승민", "지은", "은진"};
 
